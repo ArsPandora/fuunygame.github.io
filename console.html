@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>开发者控制台 - Deffrei Targaryan</title>
+    <!-- Tailwind CSS v3 -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#e63946',
+                        secondary: '#457b9d',
+                        dark: '#1d3557',
+                        light: '#f1faee',
+                        accent: '#a8dadc',
+                        darkgray: '#2d2d2d',
+                        'darkgray-light': '#3d3d3d',
+                        'darkgray-lighter': '#4d4d4d'
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif']
+                    },
+                    boxShadow: {
+                        'glow': '0 0 15px rgba(230, 57, 70, 0.5)',
+                        'glow-lg': '0 0 25px rgba(230, 57, 70, 0.6)'
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .text-shadow-lg {
+                text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6);
+            }
+            .bg-glass {
+                background: rgba(29, 53, 87, 0.7);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            .transition-all-300 {
+                transition: all 0.3s ease;
+            }
+        }
+    </style>
+    <style>
+        body {
+            background-color: #121212;
+            color: #f1faee;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #1d1d1d;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #3d3d3d;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4d4d4d;
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center bg-black">
+    <!-- Password Modal -->
+    <div id="password-modal" class="fixed inset-0 z-50">
+        <div class="absolute inset-0 bg-black bg-opacity-80 backdrop-blur-sm"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="bg-darkgray rounded-lg shadow-glow-lg p-8 max-w-md w-full">
+                <div class="text-center mb-6">
+                    <div class="w-20 h-20 rounded-full overflow-hidden mx-auto mb-4 border-4 border-primary shadow-glow">
+                        <img src="https://p3-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/d38d84a58649433ab1aebb016249c03d.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260430131418BA21D6C35A4E6CEB63B2&rrcfp=8a172a1a&x-expires=1778130858&x-signature=a%2FmrEP4UCoqoKFVKSljk0zw0%2FbQ%3D" alt="Deffrei" class="w-full h-full object-cover">
+                    </div>
+                    <h2 class="text-2xl font-bold mb-2">Deffrei</h2>
+                    <p class="text-gray-400">请输入访问密码</p>
+                </div>
+                
+                <form id="password-form" class="space-y-4">
+                    <div>
+                        <label for="password-input" class="block text-sm font-medium text-gray-400 mb-1">密码</label>
+                        <input type="password" id="password-input" 
+                               class="w-full px-4 py-2 bg-darkgray-lighter border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                               placeholder="请输入密码..."
+                               autocomplete="off">
+                    </div>
+                    
+                    <div class="flex items-center justify-between">
+                        <div class="flex items-center">
+                            <input type="checkbox" id="show-password" class="w-4 h-4 text-primary bg-darkgray-lighter border-gray-600 rounded focus:ring-primary">
+                            <label for="show-password" class="ml-2 text-sm text-gray-400">显示密码</label>
+                        </div>
+                        <a href="index.html" class="text-sm text-gray-400 hover:text-white transition-all-300">
+                            返回首页
+                        </a>
+                    </div>
+                    
+                    <button type="submit" class="w-full bg-primary hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-md shadow-glow transition-all-300 hover:-translate-y-1">
+                        解锁控制台
+                    </button>
+                </form>
+                
+                <div id="password-error" class="mt-4 hidden">
+                    <div class="bg-red-900 bg-opacity-30 border border-red-600 text-red-400 px-4 py-2 rounded-md text-sm">
+                        <i class="fa fa-exclamation-circle mr-1"></i>
+                        <span>密码错误，请重试。</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Console Page (Hidden by default) -->
+    <div id="console-page" class="fixed inset-0 z-40 hidden">
+        <div class="absolute inset-0 bg-black bg-opacity-95 backdrop-blur-md"></div>
+        <div class="absolute inset-0 flex flex-col">
+            <!-- Console Header -->
+            <div class="bg-darkgray border-b border-darkgray-lighter py-3 px-4 flex justify-between items-center">
+                <div class="flex items-center">
+                    <img src="https://p3-flow-imagex-download-sign.byteimg.com/tos-cn-i-a9rns2rl98/d38d84a58649433ab1aebb016249c03d.png~tplv-a9rns2rl98-24:720:720.png?lk3s=8e244e95&rcl=20260430131418BA21D6C35A4E6CEB63B2&rrcfp=8a172a1a&x-expires=1778130858&x-signature=a%2FmrEP4UCoqoKFVKSljk0zw0%2FbQ%3D" alt="Deffrei" class="w-8 h-8 rounded-full mr-2 object-cover border-2 border-primary">
+                    <h2 class="text-lg font-bold">Deffrei</h2>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span class="text-sm text-gray-400">Deffrei Targaryan</span>
+                    <a href="index.html" class="text-gray-400 hover:text-white transition-all-300" title="返回首页">
+                        <i class="fa fa-home text-xl"></i>
+                    </a>
+                    <button id="close-console" class="text-gray-400 hover:text-white transition-all-300" title="关闭控制台">
+                        <i class="fa fa-times text-xl"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Console Content -->
+            <div class="flex-1 overflow-auto p-6">
+                <div class="max-w-4xl mx-auto">
+                    <div class="bg-darkgray rounded-lg shadow-lg p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-gamepad text-primary mr-2"></i>
+                            游戏开发进度监控
+                        </h3>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-darkgray-lighter rounded-md p-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="font-semibold">《仰望》</h4>
+                                    <span class="text-green-500">已完成</span>
+                                </div>
+                                <div class="w-full bg-darkgray rounded-full h-2 mb-1">
+                                    <div class="bg-green-500 h-2 rounded-full" style="width: 100%"></div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-xs text-gray-400">100% 完成</div>
+                                    <input type="range" min="0" max="100" value="100" class="w-24 h-1 bg-darkgray rounded-lg appearance-none cursor-pointer" data-project-id="1" data-project-name="仰望">
+                                </div>
+                            </div>
+                            
+                            <div class="bg-darkgray-lighter rounded-md p-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="font-semibold">《神界余罪》</h4>
+                                    <span class="text-yellow-500">开发中</span>
+                                </div>
+                                <div class="w-full bg-darkgray rounded-full h-2 mb-1">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 45%"></div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-xs text-gray-400">45% 完成</div>
+                                    <input type="range" min="0" max="100" value="45" class="w-24 h-1 bg-darkgray rounded-lg appearance-none cursor-pointer" data-project-id="2" data-project-name="神界余罪">
+                                </div>
+                            </div>
+                            
+                            <div class="bg-darkgray-lighter rounded-md p-4">
+                                <div class="flex justify-between items-center mb-2">
+                                    <h4 class="font-semibold">《寻乡》</h4>
+                                    <span class="text-yellow-500">开发中</span>
+                                </div>
+                                <div class="w-full bg-darkgray rounded-full h-2 mb-1">
+                                    <div class="bg-yellow-500 h-2 rounded-full" style="width: 30%"></div>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-xs text-gray-400">30% 完成</div>
+                                    <input type="range" min="0" max="100" value="30" class="w-24 h-1 bg-darkgray rounded-lg appearance-none cursor-pointer" data-project-id="3" data-project-name="寻乡">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                    
+                    <div class="bg-darkgray rounded-lg shadow-lg p-6 mb-6">
+                        <h3 class="text-xl font-bold mb-4 flex items-center">
+                            <i class="fa fa-cogs text-primary mr-2"></i>
+                            资源管理面板
+                        </h3>
+                        
+                        <div class="space-y-6">
+                            <!-- 网盘链接管理 -->
+                            <div>
+                                <h4 class="font-semibold mb-3">网盘链接管理</h4>
+                                <div class="space-y-4">
+                                    <div class="bg-darkgray-lighter rounded-md p-4">
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">《仰望》下载链接</label>
+                                        <div class="flex mb-3">
+                                            <input type="text" id="link-game-1" value="https://pan.baidu.com/s/1example1234567890abcdef" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-game-1" data-resource-id="resource-link-1">
+                                                保存
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    
+                                    <div class="bg-darkgray-lighter rounded-md p-4">
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">《寻乡》下载链接</label>
+                                        <div class="flex mb-3">
+                                            <input type="text" id="link-game-2" value="https://pan.baidu.com/s/2example1234567890abcdef" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-game-2" data-resource-id="resource-link-2">
+                                                保存
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    
+                                    <div class="bg-darkgray-lighter rounded-md p-4">
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">像素画素材包链接</label>
+                                        <div class="flex mb-3">
+                                            <input type="text" id="link-assets-1" value="https://pan.baidu.com/s/3example1234567890abcdef" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-assets-1" data-resource-id="resource-link-3">
+                                                保存
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    
+                                    <div class="bg-darkgray-lighter rounded-md p-4">
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">游戏音效素材链接</label>
+                                        <div class="flex mb-3">
+                                            <input type="text" id="link-assets-2" value="https://pan.baidu.com/s/4example1234567890abcdef" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-assets-2" data-resource-id="resource-link-4">
+                                                保存
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                    
+                                    <div class="bg-darkgray-lighter rounded-md p-4">
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">开发日志与设计文档链接</label>
+                                        <div class="flex mb-3">
+                                            <input type="text" id="link-docs-1" value="https://pan.baidu.com/s/5example1234567890abcdef" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-docs-1" data-resource-id="resource-link-5">
+                                                保存
+                                            </button>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 图片上传 -->
+                            <div>
+                                <h4 class="font-semibold mb-3">图片资源管理</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-darkgray-lighter rounded-md p-4">
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">游戏封面图片上传</label>
+                                        <div class="border-2 border-dashed border-gray-600 rounded-md p-4 text-center cursor-pointer hover:border-primary transition-all-300" id="cover-upload-area">
+                                            <i class="fa fa-cloud-upload text-2xl text-gray-400 mb-2"></i>
+                                            <p class="text-sm text-gray-400">点击或拖拽图片到此处上传</p>
+                                            <p class="text-xs text-gray-500 mt-1">支持 JPG, PNG 格式，最大 5MB</p>
+                                            <input type="file" id="cover-upload" class="hidden" accept="image/*">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-darkgray-lighter rounded-md p-4">
+                                        <label class="block text-sm font-medium text-gray-400 mb-2">实机展示图片上传</label>
+                                        <div class="border-2 border-dashed border-gray-600 rounded-md p-4 text-center cursor-pointer hover:border-primary transition-all-300" id="screenshot-upload-area">
+                                            <i class="fa fa-cloud-upload text-2xl text-gray-400 mb-2"></i>
+                                            <p class="text-sm text-gray-400">点击或拖拽图片到此处上传</p>
+                                            <p class="text-xs text-gray-500 mt-1">支持 JPG, PNG 格式，最大 5MB</p>
+                                            <input type="file" id="screenshot-upload" class="hidden" accept="image/*">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- 资源预览 -->
+                            <div>
+                                <h4 class="font-semibold mb-3">资源预览</h4>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    <div class="bg-darkgray-lighter rounded-md p-4">
+                                        <h5 class="text-sm font-medium text-gray-400 mb-2">当前封面图片</h5>
+                                        <div class="aspect-w-16 aspect-h-9 bg-darkgray rounded-md overflow-hidden">
+                                            <img id="current-cover" src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/bbf26f71a3c7432699388e7ac947ff9f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202604301135106720E55D8093BE54B22E&rrcfp=f06b921b&x-expires=1780112161&x-signature=c40VMHUsKeJ5sYOvIDV2RNUNeZE%3D" 
+                                                 alt="当前封面图片" class="w-full h-full object-cover">
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="bg-darkgray-lighter rounded-md p-4">
+                                        <h5 class="text-sm font-medium text-gray-400 mb-2">当前实机展示图片</h5>
+                                        <div class="aspect-w-16 aspect-h-9 bg-darkgray rounded-md overflow-hidden">
+                                            <img id="current-screenshot" src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/b1695fca43aa443bb150743e59314759~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202604301135106720E55D8093BE54B22E&rrcfp=f06b921b&x-expires=1780112156&x-signature=QDJTb0Awcs8pr3M6Xr8monQNhGs%3D" 
+                                                 alt="当前实机展示图片" class="w-full h-full object-cover">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="flex justify-center">
+                                <button id="publish-changes" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md flex items-center transition-all-300 hover:shadow-glow">
+                                    <i class="fa fa-publish mr-2"></i> 发布所有更改
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+
+                </div>
+            </div>
+            
+            <!-- Console Footer -->
+            <div class="bg-darkgray border-t border-darkgray-lighter py-3 px-4 text-center text-sm text-gray-400">
+                <p>Deffrei Targaryan | PandoraGame Studio | 开发者控制台 v1.0</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Password protection functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const passwordModal = document.getElementById('password-modal');
+            const consolePage = document.getElementById('console-page');
+            const passwordForm = document.getElementById('password-form');
+            const passwordInput = document.getElementById('password-input');
+            const showPasswordCheckbox = document.getElementById('show-password');
+            const closeConsoleButton = document.getElementById('close-console');
+            const passwordError = document.getElementById('password-error');
+            
+            const CORRECT_PASSWORD = 'BF89757';
+            
+            // Real-time synchronization for share page
+            function syncToSharePage() {
+                // Create data object to store all resources
+                const resourcesData = {};
+                
+                // Get all save link buttons and collect link data
+                const saveLinkButtons = document.querySelectorAll('.save-link');
+                saveLinkButtons.forEach(button => {
+                    const linkId = button.getAttribute('data-link-id');
+                    const resourceId = button.getAttribute('data-resource-id');
+                    const inputElement = document.getElementById(linkId);
+                    
+                    if (resourceId && inputElement) {
+                        resourcesData[resourceId] = {
+                            ...resourcesData[resourceId],
+                            link: inputElement.value
+                        };
+                    }
+                });
+                
+                // Store data in localStorage for share page to access
+                localStorage.setItem('deffrei_resources', JSON.stringify(resourcesData));
+            }
+            
+            // Initialize progress bars functionality
+            function initProgressBars() {
+                const progressBars = document.querySelectorAll('input[type="range"]');
+                const progressData = JSON.parse(localStorage.getItem('deffrei_progress') || '{}');
+                
+                // Load saved progress data
+                progressBars.forEach(bar => {
+                    const projectId = bar.getAttribute('data-project-id');
+                    if (progressData[projectId] !== undefined) {
+                        bar.value = progressData[projectId];
+                        updateProgressBar(bar);
+                    }
+                });
+                
+                // Add event listeners
+                progressBars.forEach(bar => {
+                    bar.addEventListener('input', function() {
+                        updateProgressBar(this);
+                        saveProgressData();
+                    });
+                    
+                    bar.addEventListener('change', function() {
+                        // Sync with projects page when progress changes
+                        syncProgressToProjectsPage();
+                    });
+                });
+                
+                function updateProgressBar(bar) {
+                    const projectId = bar.getAttribute('data-project-id');
+                    const progress = parseInt(bar.value);
+                    const progressText = bar.previousElementSibling;
+                    const progressBar = bar.closest('.bg-darkgray-lighter').querySelector('.bg-green-500, .bg-yellow-500, .bg-gray-500');
+                    const statusBadge = bar.closest('.bg-darkgray-lighter').querySelector('span');
+                    
+                    // Update progress text
+                    progressText.textContent = `${progress}% 完成`;
+                    
+                    // Update progress bar width
+                    if (progressBar) {
+                        progressBar.style.width = `${progress}%`;
+                        
+                        // Update color based on progress
+                        if (progress === 100) {
+                            progressBar.className = 'bg-green-500 h-2 rounded-full';
+                            if (statusBadge) {
+                                statusBadge.className = 'text-green-500';
+                                statusBadge.textContent = '已完成';
+                            }
+                        } else if (progress > 0) {
+                            progressBar.className = 'bg-yellow-500 h-2 rounded-full';
+                            if (statusBadge) {
+                                statusBadge.className = 'text-yellow-500';
+                                statusBadge.textContent = '开发中';
+                            }
+                        } else {
+                            progressBar.className = 'bg-gray-500 h-2 rounded-full';
+                            if (statusBadge) {
+                                statusBadge.className = 'text-gray-500';
+                                statusBadge.textContent = '未开始';
+                            }
+                        }
+                    }
+                }
+                
+                function saveProgressData() {
+                    const progressData = {};
+                    progressBars.forEach(bar => {
+                        const projectId = bar.getAttribute('data-project-id');
+                        progressData[projectId] = parseInt(bar.value);
+                    });
+                    localStorage.setItem('deffrei_progress', JSON.stringify(progressData));
+                }
+                
+                function syncProgressToProjectsPage() {
+                    const progressData = {};
+                    progressBars.forEach(bar => {
+                        const projectId = bar.getAttribute('data-project-id');
+                        const projectName = bar.getAttribute('data-project-name');
+                        progressData[projectId] = {
+                            progress: parseInt(bar.value),
+                            name: projectName,
+                            status: parseInt(bar.value) === 100 ? 'completed' : parseInt(bar.value) > 0 ? 'in-progress' : 'not-started'
+                        };
+                    });
+                    localStorage.setItem('deffrei_project_status', JSON.stringify(progressData));
+                }
+            }
+            
+            // Initialize data synchronization
+            function initSynchronization() {
+                // Save link buttons
+                const saveLinkButtons = document.querySelectorAll('.save-link');
+                saveLinkButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const linkId = this.getAttribute('data-link-id');
+                        const resourceId = this.getAttribute('data-resource-id');
+                        const inputElement = document.getElementById(linkId);
+                        
+                        if (inputElement && resourceId) {
+                            // Update button text temporarily
+                            const originalText = this.textContent;
+                            this.textContent = '已保存';
+                            this.classList.add('bg-green-600');
+                            
+                            // Sync data
+                            syncToSharePage();
+                            
+                            // Reset button after delay
+                            setTimeout(() => {
+                                this.textContent = originalText;
+                                this.classList.remove('bg-green-600');
+                            }, 1500);
+                        }
+                    });
+                });
+                
+
+                
+                // Auto-sync on input change (optional)
+                const allInputs = document.querySelectorAll('input[type="text"]');
+                allInputs.forEach(input => {
+                    input.addEventListener('change', syncToSharePage);
+                });
+                
+                // Publish all changes button
+                const publishButton = document.getElementById('publish-changes');
+                if (publishButton) {
+                    publishButton.addEventListener('click', function() {
+                        syncToSharePage();
+                        
+                        // Show success message
+                        const originalText = this.innerHTML;
+                        this.innerHTML = '<i class="fa fa-check mr-2"></i> 所有更改已发布';
+                        this.classList.add('bg-green-600');
+                        
+                        setTimeout(() => {
+                            this.innerHTML = originalText;
+                            this.classList.remove('bg-green-600');
+                        }, 2000);
+                    });
+                }
+            }
+            
+            // Focus password input on load
+            setTimeout(() => {
+                passwordInput.focus();
+            }, 100);
+            
+            // Show/hide password
+            showPasswordCheckbox.addEventListener('change', function() {
+                passwordInput.type = this.checked ? 'text' : 'password';
+            });
+            
+            // Password form submission
+            passwordForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const enteredPassword = passwordInput.value.trim().toUpperCase();
+                
+                if (enteredPassword === CORRECT_PASSWORD) {
+                    passwordError.classList.add('hidden');
+                    passwordModal.classList.add('hidden');
+                    consolePage.classList.remove('hidden');
+                    
+                    // Initialize progress bars after console is visible
+                    initProgressBars();
+                } else {
+                    passwordError.classList.remove('hidden');
+                    passwordInput.classList.add('border-red-600');
+                    passwordInput.focus();
+                    
+                    // Shake animation
+                    passwordInput.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        passwordInput.style.animation = '';
+                    }, 500);
+                }
+            });
+            
+            // Close console
+            closeConsoleButton.addEventListener('click', function() {
+                consolePage.classList.add('hidden');
+                passwordModal.classList.remove('hidden');
+                passwordInput.value = '';
+                passwordError.classList.add('hidden');
+                passwordInput.classList.remove('border-red-600');
+                setTimeout(() => {
+                    passwordInput.focus();
+                }, 100);
+            });
+        });
+    </script>
+</body>
+</html>
