@@ -238,8 +238,8 @@
                 <a href="index.html#home" class="text-white hover:text-primary transition-all-300">首页</a>
                 <a href="projects.html" class="text-primary hover:text-primary transition-all-300 font-bold">作品</a>
                 <a href="index.html#about" class="text-white hover:text-primary transition-all-300">关于我</a>
-                <a href="console.html" class="bg-darkgray-lighter hover:bg-darkgray text-white px-3 py-1 rounded text-sm transition-all-300 flex items-center" title="Deffrei秘密小屋">
-                    <i class="fa fa-home mr-1"></i> Deffrei秘密小屋
+                <a href="share.html" class="bg-darkgray-lighter hover:bg-darkgray text-white px-3 py-1 rounded text-sm transition-all-300 flex items-center" title="资源管理中心">
+                    <i class="fa fa-download mr-1"></i> 资源管理
                 </a>
 
             </div>
@@ -256,8 +256,8 @@
                 <a href="index.html#home" class="text-white hover:text-primary transition-all-300 py-2">首页</a>
                 <a href="projects.html" class="text-primary hover:text-primary transition-all-300 py-2 font-bold">作品</a>
                 <a href="index.html#about" class="text-white hover:text-primary transition-all-300 py-2">关于我</a>
-                <a href="console.html" class="bg-darkgray-lighter hover:bg-darkgray text-white px-3 py-1 rounded text-sm transition-all-300 flex items-center w-full justify-center py-2" title="Deffrei秘密小屋">
-                    <i class="fa fa-home mr-1"></i> Deffrei秘密小屋
+                <a href="share.html" class="bg-darkgray-lighter hover:bg-darkgray text-white px-3 py-1 rounded text-sm transition-all-300 flex items-center w-full justify-center py-2" title="资源管理中心">
+                    <i class="fa fa-download mr-1"></i> 资源管理
                 </a>
 
             </div>
@@ -273,6 +273,11 @@
                     探索我的游戏创作历程，从练手作品到完整独立游戏的开发之旅
                 </p>
                 <div class="w-24 h-1 bg-primary mx-auto mt-6"></div>
+                <div class="text-center mt-6">
+                    <a href="console.html" class="bg-darkgray-lighter hover:bg-darkgray text-white px-4 py-2 rounded text-sm transition-all-300 inline-flex items-center" title="Deffrei秘密小屋" style="margin-left: 1rem;">
+                        <i class="fa fa-home mr-1"></i> Deffrei秘密小屋
+                    </a>
+                </div>
             </div>
             
             <!-- Projects Grid -->
@@ -350,16 +355,13 @@
             <div class="project-detail-header rounded-xl overflow-hidden mb-12" style="background-image: url('https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/bbf26f71a3c7432699388e7ac947ff9f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202604301135106720E55D8093BE54B22E&rrcfp=f06b921b&x-expires=1780112161&x-signature=c40VMHUsKeJ5sYOvIDV2RNUNeZE%3D');">
                 <div class="relative py-32 px-6 md:px-12">
                     <div class="max-w-4xl mx-auto">
-                        <span class="inline-block bg-green-600 text-white text-sm px-3 py-1 rounded-full mb-4">已完成</span>
+
                         <h2 class="text-4xl md:text-5xl font-bold mb-4 text-white text-shadow-lg">《仰望》</h2>
                         <p class="text-xl text-light mb-6 max-w-2xl">
                             一款暗黑奇幻题材的2D像素动作游戏，玩家将扮演失去记忆的守灯人，在被遗忘的神坛中探索，解开古老文明的覆灭之谜。
                         </p>
                         <div class="flex flex-wrap gap-4">
                             <a href="share.html" class="bg-primary hover:bg-opacity-90 text-white px-6 py-3 rounded-md flex items-center transition-all-300">
-                                <i class="fa fa-download mr-2"></i> 下载游戏
-                            </a>
-                            <a href="share.html" class="bg-darkgray-lighter hover:bg-darkgray-light text-white px-6 py-3 rounded-md flex items-center transition-all-300">
                                 <i class="fa fa-play-circle mr-2"></i> 观看演示
                             </a>
                         </div>
@@ -935,83 +937,7 @@
                             </div>
                         </div>
                         
-                        <div class="bg-darkgray-light rounded-lg p-6 mb-8">
-                            <h4 class="text-xl font-semibold mb-4">数据结构</h4>
-                            
-                            <div class="space-y-4">
-                                <div class="p-4 bg-darkgray rounded-lg">
-                                    <h5 class="font-semibold mb-2">游戏存档系统</h5>
-                                    <pre class="text-xs text-gray-300 overflow-x-auto">
-{
-    "playerData": {
-        "health": 100,
-        "maxHealth": 100,
-        "lightEnergy": 75,
-        "maxLightEnergy": 100,
-        "skills": ["dash", "lightBlast", "shield"],
-        "currentLevel": "temple_interior",
-        "checkpoint": "room_3_altar",
-        "inventory": {
-            "items": [
-                {"id": "small_health_potion", "quantity": 3},
-                {"id": "light_fragment", "quantity": 12}
-            ]
-        }
-    },
-    "gameProgress": {
-        "completedLevels": ["temple_entrance", "crystal_cave"],
-        "collectedMemories": ["memory_1", "memory_3", "memory_5"],
-        "unlockedEndings": [],
-        "gameTime": 1854,
-        "achievements": ["first_steps", "light_collector"]
-    }
-}</pre>
-                                </div>
-                                
-                                <div class="p-4 bg-darkgray rounded-lg">
-                                    <h5 class="font-semibold mb-2">敌人AI配置</h5>
-                                    <pre class="text-xs text-gray-300 overflow-x-auto">
-{
-    "enemyType": "shadow_guardian",
-    "stats": {
-        "health": 120,
-        "damage": 15,
-        "speed": 3.5,
-        "attackRange": 2.0,
-        "detectionRange": 8.0,
-        "staggerResistance": 0.7
-    },
-    "behaviorTree": {
-        "root": "selector",
-        "children": [
-            {
-                "condition": "isHealthBelow(30)",
-                "action": "retreat"
-            },
-            {
-                "condition": "isPlayerInAttackRange()",
-                "action": "attack"
-            },
-            {
-                "condition": "isPlayerInSight()",
-                "action": "chase"
-            },
-            {
-                "action": "patrol"
-            }
-        ]
-    },
-    "animations": {
-        "idle": "guardian_idle",
-        "walk": "guardian_walk",
-        "attack": "guardian_attack",
-        "hurt": "guardian_hurt",
-        "die": "guardian_die"
-    }
-}</pre>
-                                </div>
-                            </div>
-                        </div>
+
                         
                         <div class="bg-darkgray-light rounded-lg p-6">
                             <h4 class="text-xl font-semibold mb-4">技术文档</h4>
@@ -1088,6 +1014,7 @@
                     <a href="index.html#home" class="text-gray-400 hover:text-primary transition-all-300">首页</a>
                     <a href="projects.html" class="text-primary hover:text-primary transition-all-300">作品</a>
                     <a href="index.html#about" class="text-gray-400 hover:text-primary transition-all-300">关于我</a>
+                    <a href="share.html" class="text-gray-400 hover:text-primary transition-all-300">资源管理</a>
                 </div>
             </div>
         </div>

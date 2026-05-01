@@ -8,8 +8,6 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
-    <!-- SMTP.js for email sending -->
-    <script src="https://smtpjs.com/v3/smtp.js"></script>
     
     <script>
         tailwind.config = {
@@ -131,52 +129,6 @@
                         <span>密码错误，请重试。</span>
                     </div>
                 </div>
-                
-                <!-- Verification Code Form (Hidden by default) -->
-                <form id="verification-form" class="space-y-4 hidden">
-                    <div class="text-center mb-4">
-                        <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <i class="fa fa-shield text-primary text-2xl"></i>
-                        </div>
-                        <h3 class="text-xl font-bold mb-2">二次验证</h3>
-                        <p class="text-gray-400 text-sm">验证码已发送至 <span class="text-primary">3756226616@qq.com</span></p>
-                    </div>
-                    
-                    <div>
-                        <label for="verification-code" class="block text-sm font-medium text-gray-400 mb-1">验证码</label>
-                        <div class="flex items-center">
-                            <input type="text" id="verification-code" maxlength="6"
-                                   class="w-full px-4 py-2 bg-darkgray-lighter border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary"
-                                   placeholder="请输入6位数字验证码..."
-                                   autocomplete="off">
-                            <button type="button" id="resend-code" class="ml-2 text-primary hover:text-white transition-all-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                                <i class="fa fa-refresh"></i>
-                            </button>
-                        </div>
-                        <div class="flex justify-between items-center mt-2">
-                            <span id="countdown" class="text-sm text-gray-500">5:00</span>
-                            <button type="button" id="change-email" class="text-xs text-gray-400 hover:text-primary transition-all-300">
-                                更换邮箱
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="flex space-x-3">
-                        <button type="button" id="back-to-password" class="flex-1 bg-darkgray-lighter hover:bg-darkgray text-white font-bold py-2 px-4 rounded-md transition-all-300">
-                            <i class="fa fa-arrow-left mr-2"></i> 返回
-                        </button>
-                        <button type="submit" class="flex-1 bg-primary hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-md shadow-glow transition-all-300 hover:-translate-y-1">
-                            验证
-                        </button>
-                    </div>
-                </form>
-                
-                <div id="verification-error" class="mt-4 hidden">
-                    <div class="bg-red-900 bg-opacity-30 border border-red-600 text-red-400 px-4 py-2 rounded-md text-sm">
-                        <i class="fa fa-exclamation-circle mr-1"></i>
-                        <span>验证码错误或已过期，请重试。</span>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -258,117 +210,7 @@
                     
 
                     
-                    <div class="bg-darkgray rounded-lg shadow-lg p-6 mb-6">
-                        <h3 class="text-xl font-bold mb-4 flex items-center">
-                            <i class="fa fa-cogs text-primary mr-2"></i>
-                            资源管理面板
-                        </h3>
-                        
-                        <div class="space-y-6">
-                            <!-- 网盘链接管理 -->
-                            <div>
-                                <h4 class="font-semibold mb-3">网盘链接管理</h4>
-                                <div class="space-y-4">
-                                    <div class="bg-darkgray-lighter rounded-md p-4">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">《仰望》下载链接</label>
-                                        <div class="flex mb-3">
-                                            <input type="text" id="link-game-1" value="https://pan.baidu.com/s/1example1234567890abcdef" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-game-1" data-resource-id="resource-link-1">
-                                                保存
-                                            </button>
-                                        </div>
-                                        <div class="flex">
-                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
-                                            <input type="text" id="code-game-1" value="abcd" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-game-1" data-resource-id="resource-code-1">
-                                                保存
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="bg-darkgray-lighter rounded-md p-4">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">《寻乡》下载链接</label>
-                                        <div class="flex mb-3">
-                                            <input type="text" id="link-game-2" value="https://pan.baidu.com/s/2example1234567890abcdef" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-game-2" data-resource-id="resource-link-2">
-                                                保存
-                                            </button>
-                                        </div>
-                                        <div class="flex">
-                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
-                                            <input type="text" id="code-game-2" value="efgh" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-game-2" data-resource-id="resource-code-2">
-                                                保存
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="bg-darkgray-lighter rounded-md p-4">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">像素画素材包链接</label>
-                                        <div class="flex mb-3">
-                                            <input type="text" id="link-assets-1" value="https://pan.baidu.com/s/3example1234567890abcdef" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-assets-1" data-resource-id="resource-link-3">
-                                                保存
-                                            </button>
-                                        </div>
-                                        <div class="flex">
-                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
-                                            <input type="text" id="code-assets-1" value="ijkl" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-assets-1" data-resource-id="resource-code-3">
-                                                保存
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="bg-darkgray-lighter rounded-md p-4">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">游戏音效素材链接</label>
-                                        <div class="flex mb-3">
-                                            <input type="text" id="link-assets-2" value="https://pan.baidu.com/s/4example1234567890abcdef" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-assets-2" data-resource-id="resource-link-4">
-                                                保存
-                                            </button>
-                                        </div>
-                                        <div class="flex">
-                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
-                                            <input type="text" id="code-assets-2" value="mnop" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-assets-2" data-resource-id="resource-code-4">
-                                                保存
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="bg-darkgray-lighter rounded-md p-4">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">开发日志与设计文档链接</label>
-                                        <div class="flex mb-3">
-                                            <input type="text" id="link-docs-1" value="https://pan.baidu.com/s/5example1234567890abcdef" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-l-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-link bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300" data-link-id="link-docs-1" data-resource-id="resource-link-5">
-                                                保存
-                                            </button>
-                                        </div>
-                                        <div class="flex">
-                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
-                                            <input type="text" id="code-docs-1" value="qrst" 
-                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
-                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-docs-1" data-resource-id="resource-code-5">
-                                                保存
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
 
-                        </div>
-                    </div>
                     
 
                 </div>
@@ -392,59 +234,9 @@
             const closeConsoleButton = document.getElementById('close-console');
             const passwordError = document.getElementById('password-error');
             
-            // Two-factor authentication elements
-            const verificationForm = document.getElementById('verification-form');
-            const verificationCodeInput = document.getElementById('verification-code');
-            const verificationError = document.getElementById('verification-error');
-            const countdownElement = document.getElementById('countdown');
-            const resendCodeButton = document.getElementById('resend-code');
-            const backToPasswordButton = document.getElementById('back-to-password');
-            const changeEmailButton = document.getElementById('change-email');
-            
             const CORRECT_PASSWORD = 'BF89757';
-            let currentVerificationCode = '';
-            let countdownTimer = null;
-            let countdownSeconds = 300; // 5 minutes
-            const EMAIL = '3756226616@qq.com';
             
-            // Real-time synchronization for share page
-            function syncToSharePage() {
-                // Create data object to store all resources
-                const resourcesData = {};
-                
-                // Get all save link buttons and collect link data
-                const saveLinkButtons = document.querySelectorAll('.save-link');
-                saveLinkButtons.forEach(button => {
-                    const linkId = button.getAttribute('data-link-id');
-                    const resourceId = button.getAttribute('data-resource-id');
-                    const inputElement = document.getElementById(linkId);
-                    
-                    if (resourceId && inputElement) {
-                        resourcesData[resourceId] = {
-                            ...resourcesData[resourceId],
-                            link: inputElement.value
-                        };
-                    }
-                });
-                
-                // Get all save code buttons and collect code data
-                const saveCodeButtons = document.querySelectorAll('.save-code');
-                saveCodeButtons.forEach(button => {
-                    const codeId = button.getAttribute('data-code-id');
-                    const resourceId = button.getAttribute('data-resource-id');
-                    const inputElement = document.getElementById(codeId);
-                    
-                    if (resourceId && inputElement) {
-                        resourcesData[resourceId] = {
-                            ...resourcesData[resourceId],
-                            code: inputElement.value
-                        };
-                    }
-                });
-                
-                // Store data in localStorage for share page to access
-                localStorage.setItem('deffrei_resources', JSON.stringify(resourcesData));
-            }
+
             
             // Initialize progress bars functionality
             function initProgressBars() {
@@ -534,86 +326,7 @@
                 }
             }
             
-            // Initialize data synchronization
-            function initSynchronization() {
-                // Save link buttons
-                const saveLinkButtons = document.querySelectorAll('.save-link');
-                saveLinkButtons.forEach(button => {
-                    button.addEventListener('click', function() {
-                        const linkId = this.getAttribute('data-link-id');
-                        const resourceId = this.getAttribute('data-resource-id');
-                        const inputElement = document.getElementById(linkId);
-                        
-                        if (inputElement && resourceId) {
-                            // Update button text temporarily
-                            const originalText = this.textContent;
-                            this.textContent = '已保存';
-                            this.classList.add('bg-green-600');
-                            
-                            // Sync data
-                            syncToSharePage();
-                            
-                            // Reset button after delay
-                            setTimeout(() => {
-                                this.textContent = originalText;
-                                this.classList.remove('bg-green-600');
-                            }, 1500);
-                        }
-                    });
-                });
-                
-                // Save code buttons
-                const saveCodeButtons = document.querySelectorAll('.save-code');
-                saveCodeButtons.forEach(button => {
-                    button.addEventListener('click', function() {
-                        const codeId = this.getAttribute('data-code-id');
-                        const resourceId = this.getAttribute('data-resource-id');
-                        const inputElement = document.getElementById(codeId);
-                        
-                        if (inputElement && resourceId) {
-                            // Update button text temporarily
-                            const originalText = this.textContent;
-                            this.textContent = '已保存';
-                            this.classList.add('bg-green-600');
-                            
-                            // Sync data
-                            syncToSharePage();
-                            
-                            // Reset button after delay
-                            setTimeout(() => {
-                                this.textContent = originalText;
-                                this.classList.remove('bg-green-600');
-                            }, 1500);
-                        }
-                    });
-                });
-                
 
-                
-                // Auto-sync on input change (optional)
-                const allInputs = document.querySelectorAll('input[type="text"]');
-                allInputs.forEach(input => {
-                    input.addEventListener('change', syncToSharePage);
-                });
-                
-                // Publish all changes button
-                const publishButton = document.getElementById('publish-changes');
-                if (publishButton) {
-                    publishButton.addEventListener('click', function() {
-                        syncToSharePage();
-                        
-                        // Show success message
-                        const originalText = this.innerHTML;
-                        this.innerHTML = '<i class="fa fa-check mr-2"></i> 所有更改已发布';
-                        this.classList.add('bg-green-600');
-                        
-                        setTimeout(() => {
-                            this.innerHTML = originalText;
-                            this.classList.remove('bg-green-600');
-                        }, 2000);
-                    });
-                }
-            }
             
             // Focus password input on load
             setTimeout(() => {
@@ -625,139 +338,7 @@
                 passwordInput.type = this.checked ? 'text' : 'password';
             });
             
-            // Generate random verification code
-            function generateVerificationCode() {
-                return Math.floor(100000 + Math.random() * 900000).toString();
-            }
-            
-            // Send verification code (real email sending)
-            function sendVerificationCode() {
-                currentVerificationCode = generateVerificationCode();
-                
-                // Show sending status
-                const sendingMessage = document.createElement('div');
-                sendingMessage.className = 'bg-blue-900 bg-opacity-30 border border-blue-600 text-blue-400 px-4 py-2 rounded-md text-sm mt-2';
-                sendingMessage.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> <span>正在发送验证码，请稍候...</span>';
-                verificationForm.appendChild(sendingMessage);
-                
-                // Configure email parameters
-                const emailParams = {
-                    SecureToken: "your_secure_token_here", // Replace with your actual secure token
-                    To: EMAIL,
-                    From: "noreply@pandoragame.com", // Replace with your sender email
-                    Subject: "Deffrei控制台二次验证 - 验证码",
-                    Body: `
-                        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4;">
-                            <div style="background-color: #1d3557; color: white; padding: 20px; border-radius: 5px 5px 0 0;">
-                                <h2 style="margin: 0;">Deffrei控制台二次验证</h2>
-                            </div>
-                            <div style="background-color: white; padding: 30px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-                                <p>您好，Deffrei Targaryan</p>
-                                <p>您正在尝试访问开发者控制台，这是您的二次验证验证码：</p>
-                                <div style="font-size: 32px; font-weight: bold; text-align: center; margin: 30px 0; color: #e63946; letter-spacing: 5px;">
-                                    ${currentVerificationCode}
-                                </div>
-                                <p>验证码有效期为5分钟，请尽快使用。</p>
-                                <p style="color: #666; font-size: 12px; margin-top: 30px;">
-                                    此邮件由系统自动发送，请勿回复。如果您没有尝试登录，请忽略此邮件。
-                                </p>
-                            </div>
-                        </div>
-                    `
-                };
-                
-                // Send email using SMTP.js
-                Email.send(emailParams)
-                    .then(() => {
-                        // Remove sending message
-                        sendingMessage.remove();
-                        
-                        // Show success message
-                        const successMessage = document.createElement('div');
-                        successMessage.className = 'bg-green-900 bg-opacity-30 border border-green-600 text-green-400 px-4 py-2 rounded-md text-sm mt-2';
-                        successMessage.innerHTML = `<i class="fa fa-check-circle mr-1"></i> <span>验证码已成功发送至您的邮箱。验证码：${currentVerificationCode}</span>`;
-                        verificationForm.appendChild(successMessage);
-                        
-                        // Remove success message after 3 seconds
-                        setTimeout(() => {
-                            successMessage.remove();
-                        }, 3000);
-                        
-                        console.log('Verification code sent successfully to', EMAIL + ':', currentVerificationCode);
-                    })
-                    .catch(error => {
-                        // Remove sending message
-                        sendingMessage.remove();
-                        
-                        // Show error message
-                        const errorMessage = document.createElement('div');
-                        errorMessage.className = 'bg-red-900 bg-opacity-30 border border-red-600 text-red-400 px-4 py-2 rounded-md text-sm mt-2';
-                        errorMessage.innerHTML = '<i class="fa fa-exclamation-circle mr-1"></i> <span>发送失败，请稍后重试。错误：' + error.message + '</span>';
-                        verificationForm.appendChild(errorMessage);
-                        
-                        console.error('Failed to send verification code:', error);
-                        
-                        // Enable resend button immediately
-                        resendCodeButton.disabled = false;
-                        countdownElement.textContent = '发送失败';
-                    });
-            }
-            
-            // Start countdown timer
-            function startCountdown() {
-                countdownSeconds = 300; // Reset to 5 minutes
-                updateCountdown();
-                
-                if (countdownTimer) {
-                    clearInterval(countdownTimer);
-                }
-                
-                countdownTimer = setInterval(() => {
-                    countdownSeconds--;
-                    updateCountdown();
-                    
-                    if (countdownSeconds <= 0) {
-                        clearInterval(countdownTimer);
-                        resendCodeButton.disabled = false;
-                        countdownElement.textContent = '已过期';
-                        verificationError.classList.remove('hidden');
-                        verificationError.querySelector('span').textContent = '验证码已过期，请重新发送。';
-                    }
-                }, 1000);
-            }
-            
-            // Update countdown display
-            function updateCountdown() {
-                const minutes = Math.floor(countdownSeconds / 60);
-                const seconds = countdownSeconds % 60;
-                countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
-            }
-            
-            // Show verification form
-            function showVerificationForm() {
-                passwordForm.classList.add('hidden');
-                verificationForm.classList.remove('hidden');
-                verificationError.classList.add('hidden');
-                verificationCodeInput.value = '';
-                verificationCodeInput.focus();
-                
-                // Send verification code and start countdown
-                sendVerificationCode();
-                startCountdown();
-            }
-            
-            // Show password form
-            function showPasswordForm() {
-                verificationForm.classList.add('hidden');
-                passwordForm.classList.remove('hidden');
-                passwordInput.focus();
-                
-                // Clear countdown
-                if (countdownTimer) {
-                    clearInterval(countdownTimer);
-                    countdownTimer = null;
-                }
-            }
+
             
             // Password form submission
             passwordForm.addEventListener('submit', function(e) {
@@ -768,8 +349,12 @@
                     passwordError.classList.add('hidden');
                     passwordInput.classList.remove('border-red-600');
                     
-                    // Show verification form for two-factor authentication
-                    showVerificationForm();
+                    // Directly show console page after password verification
+                    passwordModal.classList.add('hidden');
+                    consolePage.classList.remove('hidden');
+                    
+                    // Initialize progress bars after console is visible
+                    initProgressBars();
                 } else {
                     passwordError.classList.remove('hidden');
                     passwordInput.classList.add('border-red-600');
@@ -783,37 +368,7 @@
                 }
             });
             
-            // Verification form submission
-            verificationForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const enteredCode = verificationCodeInput.value.trim();
-                
-                if (enteredCode === currentVerificationCode && countdownSeconds > 0) {
-                    verificationError.classList.add('hidden');
-                    verificationCodeInput.classList.remove('border-red-600');
-                    passwordModal.classList.add('hidden');
-                    consolePage.classList.remove('hidden');
-                    
-                    // Clear countdown
-                    if (countdownTimer) {
-                        clearInterval(countdownTimer);
-                        countdownTimer = null;
-                    }
-                    
-                    // Initialize progress bars after console is visible
-                    initProgressBars();
-                } else {
-                    verificationError.classList.remove('hidden');
-                    verificationCodeInput.classList.add('border-red-600');
-                    verificationCodeInput.focus();
-                    
-                    // Shake animation
-                    verificationCodeInput.style.animation = 'shake 0.5s';
-                    setTimeout(() => {
-                        verificationCodeInput.style.animation = '';
-                    }, 500);
-                }
-            });
+
             
             // Close console
             closeConsoleButton.addEventListener('click', function() {
@@ -838,50 +393,7 @@
                 showPasswordForm();
             });
             
-            // Back to password button
-            backToPasswordButton.addEventListener('click', function() {
-                showPasswordForm();
-            });
-            
-            // Resend code button
-            resendCodeButton.addEventListener('click', function() {
-                if (!this.disabled) {
-                    sendVerificationCode();
-                    startCountdown();
-                    this.disabled = true;
-                    verificationError.classList.add('hidden');
-                    verificationCodeInput.focus();
-                    
-                    // Show success message
-                    const successMessage = document.createElement('div');
-                    successMessage.className = 'bg-green-900 bg-opacity-30 border border-green-600 text-green-400 px-4 py-2 rounded-md text-sm mt-2';
-                    successMessage.innerHTML = '<i class="fa fa-check-circle mr-1"></i> <span>验证码已重新发送。</span>';
-                    verificationForm.appendChild(successMessage);
-                    
-                    setTimeout(() => {
-                        successMessage.remove();
-                    }, 3000);
-                }
-            });
-            
-            // Change email button (placeholder functionality)
-            changeEmailButton.addEventListener('click', function() {
-                alert('邮箱修改功能暂未开放。当前邮箱：' + EMAIL);
-            });
-            
-            // Auto-focus verification code input on paste
-            verificationCodeInput.addEventListener('paste', function(e) {
-                setTimeout(() => {
-                    if (this.value.length === 6) {
-                        verificationForm.dispatchEvent(new Event('submit'));
-                    }
-                }, 100);
-            });
-            
-            // Only allow numbers in verification code input
-            verificationCodeInput.addEventListener('input', function(e) {
-                this.value = this.value.replace(/[^0-9]/g, '');
-            });
+
         });
     </script>
 </body>
