@@ -8,6 +8,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Font Awesome -->
     <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- SMTP.js for email sending -->
+    <script src="https://smtpjs.com/v3/smtp.js"></script>
     
     <script>
         tailwind.config = {
@@ -127,6 +129,52 @@
                     <div class="bg-red-900 bg-opacity-30 border border-red-600 text-red-400 px-4 py-2 rounded-md text-sm">
                         <i class="fa fa-exclamation-circle mr-1"></i>
                         <span>密码错误，请重试。</span>
+                    </div>
+                </div>
+                
+                <!-- Verification Code Form (Hidden by default) -->
+                <form id="verification-form" class="space-y-4 hidden">
+                    <div class="text-center mb-4">
+                        <div class="w-16 h-16 bg-primary bg-opacity-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-shield text-primary text-2xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold mb-2">二次验证</h3>
+                        <p class="text-gray-400 text-sm">验证码已发送至 <span class="text-primary">3756226616@qq.com</span></p>
+                    </div>
+                    
+                    <div>
+                        <label for="verification-code" class="block text-sm font-medium text-gray-400 mb-1">验证码</label>
+                        <div class="flex items-center">
+                            <input type="text" id="verification-code" maxlength="6"
+                                   class="w-full px-4 py-2 bg-darkgray-lighter border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary"
+                                   placeholder="请输入6位数字验证码..."
+                                   autocomplete="off">
+                            <button type="button" id="resend-code" class="ml-2 text-primary hover:text-white transition-all-300 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+                                <i class="fa fa-refresh"></i>
+                            </button>
+                        </div>
+                        <div class="flex justify-between items-center mt-2">
+                            <span id="countdown" class="text-sm text-gray-500">5:00</span>
+                            <button type="button" id="change-email" class="text-xs text-gray-400 hover:text-primary transition-all-300">
+                                更换邮箱
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="flex space-x-3">
+                        <button type="button" id="back-to-password" class="flex-1 bg-darkgray-lighter hover:bg-darkgray text-white font-bold py-2 px-4 rounded-md transition-all-300">
+                            <i class="fa fa-arrow-left mr-2"></i> 返回
+                        </button>
+                        <button type="submit" class="flex-1 bg-primary hover:bg-opacity-90 text-white font-bold py-2 px-4 rounded-md shadow-glow transition-all-300 hover:-translate-y-1">
+                            验证
+                        </button>
+                    </div>
+                </form>
+                
+                <div id="verification-error" class="mt-4 hidden">
+                    <div class="bg-red-900 bg-opacity-30 border border-red-600 text-red-400 px-4 py-2 rounded-md text-sm">
+                        <i class="fa fa-exclamation-circle mr-1"></i>
+                        <span>验证码错误或已过期，请重试。</span>
                     </div>
                 </div>
             </div>
@@ -334,7 +382,7 @@
     </div>
 
     <script>
-        // Password protection functionality
+        // Password protection functionality with two-factor authentication
         document.addEventListener('DOMContentLoaded', function() {
             const passwordModal = document.getElementById('password-modal');
             const consolePage = document.getElementById('console-page');
@@ -344,7 +392,20 @@
             const closeConsoleButton = document.getElementById('close-console');
             const passwordError = document.getElementById('password-error');
             
+            // Two-factor authentication elements
+            const verificationForm = document.getElementById('verification-form');
+            const verificationCodeInput = document.getElementById('verification-code');
+            const verificationError = document.getElementById('verification-error');
+            const countdownElement = document.getElementById('countdown');
+            const resendCodeButton = document.getElementById('resend-code');
+            const backToPasswordButton = document.getElementById('back-to-password');
+            const changeEmailButton = document.getElementById('change-email');
+            
             const CORRECT_PASSWORD = 'BF89757';
+            let currentVerificationCode = '';
+            let countdownTimer = null;
+            let countdownSeconds = 300; // 5 minutes
+            const EMAIL = '3756226616@qq.com';
             
             // Real-time synchronization for share page
             function syncToSharePage() {
@@ -564,6 +625,140 @@
                 passwordInput.type = this.checked ? 'text' : 'password';
             });
             
+            // Generate random verification code
+            function generateVerificationCode() {
+                return Math.floor(100000 + Math.random() * 900000).toString();
+            }
+            
+            // Send verification code (real email sending)
+            function sendVerificationCode() {
+                currentVerificationCode = generateVerificationCode();
+                
+                // Show sending status
+                const sendingMessage = document.createElement('div');
+                sendingMessage.className = 'bg-blue-900 bg-opacity-30 border border-blue-600 text-blue-400 px-4 py-2 rounded-md text-sm mt-2';
+                sendingMessage.innerHTML = '<i class="fa fa-spinner fa-spin mr-1"></i> <span>正在发送验证码，请稍候...</span>';
+                verificationForm.appendChild(sendingMessage);
+                
+                // Configure email parameters
+                const emailParams = {
+                    SecureToken: "your_secure_token_here", // Replace with your actual secure token
+                    To: EMAIL,
+                    From: "noreply@pandoragame.com", // Replace with your sender email
+                    Subject: "Deffrei控制台二次验证 - 验证码",
+                    Body: `
+                        <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; background-color: #f4f4f4;">
+                            <div style="background-color: #1d3557; color: white; padding: 20px; border-radius: 5px 5px 0 0;">
+                                <h2 style="margin: 0;">Deffrei控制台二次验证</h2>
+                            </div>
+                            <div style="background-color: white; padding: 30px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                                <p>您好，Deffrei Targaryan</p>
+                                <p>您正在尝试访问开发者控制台，这是您的二次验证验证码：</p>
+                                <div style="font-size: 32px; font-weight: bold; text-align: center; margin: 30px 0; color: #e63946; letter-spacing: 5px;">
+                                    ${currentVerificationCode}
+                                </div>
+                                <p>验证码有效期为5分钟，请尽快使用。</p>
+                                <p style="color: #666; font-size: 12px; margin-top: 30px;">
+                                    此邮件由系统自动发送，请勿回复。如果您没有尝试登录，请忽略此邮件。
+                                </p>
+                            </div>
+                        </div>
+                    `
+                };
+                
+                // Send email using SMTP.js
+                Email.send(emailParams)
+                    .then(() => {
+                        // Remove sending message
+                        sendingMessage.remove();
+                        
+                        // Show success message
+                        const successMessage = document.createElement('div');
+                        successMessage.className = 'bg-green-900 bg-opacity-30 border border-green-600 text-green-400 px-4 py-2 rounded-md text-sm mt-2';
+                        successMessage.innerHTML = `<i class="fa fa-check-circle mr-1"></i> <span>验证码已成功发送至您的邮箱。验证码：${currentVerificationCode}</span>`;
+                        verificationForm.appendChild(successMessage);
+                        
+                        // Remove success message after 3 seconds
+                        setTimeout(() => {
+                            successMessage.remove();
+                        }, 3000);
+                        
+                        console.log('Verification code sent successfully to', EMAIL + ':', currentVerificationCode);
+                    })
+                    .catch(error => {
+                        // Remove sending message
+                        sendingMessage.remove();
+                        
+                        // Show error message
+                        const errorMessage = document.createElement('div');
+                        errorMessage.className = 'bg-red-900 bg-opacity-30 border border-red-600 text-red-400 px-4 py-2 rounded-md text-sm mt-2';
+                        errorMessage.innerHTML = '<i class="fa fa-exclamation-circle mr-1"></i> <span>发送失败，请稍后重试。错误：' + error.message + '</span>';
+                        verificationForm.appendChild(errorMessage);
+                        
+                        console.error('Failed to send verification code:', error);
+                        
+                        // Enable resend button immediately
+                        resendCodeButton.disabled = false;
+                        countdownElement.textContent = '发送失败';
+                    });
+            }
+            
+            // Start countdown timer
+            function startCountdown() {
+                countdownSeconds = 300; // Reset to 5 minutes
+                updateCountdown();
+                
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                }
+                
+                countdownTimer = setInterval(() => {
+                    countdownSeconds--;
+                    updateCountdown();
+                    
+                    if (countdownSeconds <= 0) {
+                        clearInterval(countdownTimer);
+                        resendCodeButton.disabled = false;
+                        countdownElement.textContent = '已过期';
+                        verificationError.classList.remove('hidden');
+                        verificationError.querySelector('span').textContent = '验证码已过期，请重新发送。';
+                    }
+                }, 1000);
+            }
+            
+            // Update countdown display
+            function updateCountdown() {
+                const minutes = Math.floor(countdownSeconds / 60);
+                const seconds = countdownSeconds % 60;
+                countdownElement.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            }
+            
+            // Show verification form
+            function showVerificationForm() {
+                passwordForm.classList.add('hidden');
+                verificationForm.classList.remove('hidden');
+                verificationError.classList.add('hidden');
+                verificationCodeInput.value = '';
+                verificationCodeInput.focus();
+                
+                // Send verification code and start countdown
+                sendVerificationCode();
+                startCountdown();
+            }
+            
+            // Show password form
+            function showPasswordForm() {
+                verificationForm.classList.add('hidden');
+                passwordForm.classList.remove('hidden');
+                passwordInput.focus();
+                
+                // Clear countdown
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                }
+            }
+            
             // Password form submission
             passwordForm.addEventListener('submit', function(e) {
                 e.preventDefault();
@@ -571,11 +766,10 @@
                 
                 if (enteredPassword === CORRECT_PASSWORD) {
                     passwordError.classList.add('hidden');
-                    passwordModal.classList.add('hidden');
-                    consolePage.classList.remove('hidden');
+                    passwordInput.classList.remove('border-red-600');
                     
-                    // Initialize progress bars after console is visible
-                    initProgressBars();
+                    // Show verification form for two-factor authentication
+                    showVerificationForm();
                 } else {
                     passwordError.classList.remove('hidden');
                     passwordInput.classList.add('border-red-600');
@@ -589,6 +783,38 @@
                 }
             });
             
+            // Verification form submission
+            verificationForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const enteredCode = verificationCodeInput.value.trim();
+                
+                if (enteredCode === currentVerificationCode && countdownSeconds > 0) {
+                    verificationError.classList.add('hidden');
+                    verificationCodeInput.classList.remove('border-red-600');
+                    passwordModal.classList.add('hidden');
+                    consolePage.classList.remove('hidden');
+                    
+                    // Clear countdown
+                    if (countdownTimer) {
+                        clearInterval(countdownTimer);
+                        countdownTimer = null;
+                    }
+                    
+                    // Initialize progress bars after console is visible
+                    initProgressBars();
+                } else {
+                    verificationError.classList.remove('hidden');
+                    verificationCodeInput.classList.add('border-red-600');
+                    verificationCodeInput.focus();
+                    
+                    // Shake animation
+                    verificationCodeInput.style.animation = 'shake 0.5s';
+                    setTimeout(() => {
+                        verificationCodeInput.style.animation = '';
+                    }, 500);
+                }
+            });
+            
             // Close console
             closeConsoleButton.addEventListener('click', function() {
                 consolePage.classList.add('hidden');
@@ -596,9 +822,65 @@
                 passwordInput.value = '';
                 passwordError.classList.add('hidden');
                 passwordInput.classList.remove('border-red-600');
+                
+                // Reset verification form
+                verificationCodeInput.value = '';
+                verificationError.classList.add('hidden');
+                verificationCodeInput.classList.remove('border-red-600');
+                
+                // Clear countdown
+                if (countdownTimer) {
+                    clearInterval(countdownTimer);
+                    countdownTimer = null;
+                }
+                
+                // Show password form
+                showPasswordForm();
+            });
+            
+            // Back to password button
+            backToPasswordButton.addEventListener('click', function() {
+                showPasswordForm();
+            });
+            
+            // Resend code button
+            resendCodeButton.addEventListener('click', function() {
+                if (!this.disabled) {
+                    sendVerificationCode();
+                    startCountdown();
+                    this.disabled = true;
+                    verificationError.classList.add('hidden');
+                    verificationCodeInput.focus();
+                    
+                    // Show success message
+                    const successMessage = document.createElement('div');
+                    successMessage.className = 'bg-green-900 bg-opacity-30 border border-green-600 text-green-400 px-4 py-2 rounded-md text-sm mt-2';
+                    successMessage.innerHTML = '<i class="fa fa-check-circle mr-1"></i> <span>验证码已重新发送。</span>';
+                    verificationForm.appendChild(successMessage);
+                    
+                    setTimeout(() => {
+                        successMessage.remove();
+                    }, 3000);
+                }
+            });
+            
+            // Change email button (placeholder functionality)
+            changeEmailButton.addEventListener('click', function() {
+                alert('邮箱修改功能暂未开放。当前邮箱：' + EMAIL);
+            });
+            
+            // Auto-focus verification code input on paste
+            verificationCodeInput.addEventListener('paste', function(e) {
                 setTimeout(() => {
-                    passwordInput.focus();
+                    if (this.value.length === 6) {
+                        verificationForm.dispatchEvent(new Event('submit'));
+                    }
                 }, 100);
+            });
+            
+            // Only allow numbers in verification code input
+            verificationCodeInput.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[^0-9]/g, '');
             });
         });
     </script>
