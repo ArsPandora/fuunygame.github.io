@@ -198,6 +198,15 @@
                                     <i class="fa fa-info-circle text-primary mr-2"></i>
                                     <span class="font-semibold">资源信息</span>
                                 </div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-400">提取码：</span>
+                                    <div class="flex items-center">
+                                        <span class="text-white font-mono code-display" data-target="resource-code-5">qrst</span>
+                                        <button class="copy-code-button ml-2 text-primary hover:text-primary-dark transition-colors" data-target="resource-code-5" data-name="开发日志与设计文档提取码">
+                                            <i class="fa fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                     <div>
                                         <p><span class="text-gray-400">网盘链接：</span> <span id="resource-link-1" class="text-primary">https://pan.baidu.com/s/1BLVl_ox_d5XnrK2g-VRHGA?pwd=ARSA</span></p>
@@ -237,6 +246,15 @@
                                 <div class="flex items-center mb-2">
                                     <i class="fa fa-info-circle text-secondary mr-2"></i>
                                     <span class="font-semibold">资源信息</span>
+                                </div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-400">提取码：</span>
+                                    <div class="flex items-center">
+                                        <span class="text-white font-mono code-display" data-target="resource-code-4">mnop</span>
+                                        <button class="copy-code-button ml-2 text-secondary hover:text-secondary-dark transition-colors" data-target="resource-code-4" data-name="游戏音效素材提取码">
+                                            <i class="fa fa-copy"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                     <div>
@@ -284,6 +302,15 @@
                                     <i class="fa fa-info-circle text-accent mr-2"></i>
                                     <span class="font-semibold">资源信息</span>
                                 </div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-400">提取码：</span>
+                                    <div class="flex items-center">
+                                        <span class="text-white font-mono code-display" data-target="resource-code-3">ijkl</span>
+                                        <button class="copy-code-button ml-2 text-accent hover:text-accent-dark transition-colors" data-target="resource-code-3" data-name="像素画素材包提取码">
+                                            <i class="fa fa-copy"></i>
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                     <div>
                                         <p><span class="text-gray-400">网盘链接：</span> <span id="resource-link-3" class="text-primary">https://pan.baidu.com/s/3example1234567890abcdef</span></p>
@@ -322,6 +349,15 @@
                                 <div class="flex items-center mb-2">
                                     <i class="fa fa-info-circle text-secondary mr-2"></i>
                                     <span class="font-semibold">资源信息</span>
+                                </div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-400">提取码：</span>
+                                    <div class="flex items-center">
+                                        <span class="text-white font-mono code-display" data-target="resource-code-4">mnop</span>
+                                        <button class="copy-code-button ml-2 text-secondary hover:text-secondary-dark transition-colors" data-target="resource-code-4" data-name="游戏音效素材提取码">
+                                            <i class="fa fa-copy"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                     <div>
@@ -368,6 +404,15 @@
                                 <div class="flex items-center mb-2">
                                     <i class="fa fa-info-circle text-primary mr-2"></i>
                                     <span class="font-semibold">资源信息</span>
+                                </div>
+                                <div class="flex items-center justify-between mb-2">
+                                    <span class="text-sm text-gray-400">提取码：</span>
+                                    <div class="flex items-center">
+                                        <span class="text-white font-mono code-display" data-target="resource-code-5">qrst</span>
+                                        <button class="copy-code-button ml-2 text-primary hover:text-primary-dark transition-colors" data-target="resource-code-5" data-name="开发日志与设计文档提取码">
+                                            <i class="fa fa-copy"></i>
+                                        </button>
+                                    </div>
                                 </div>
                                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                                     <div>
@@ -426,13 +471,24 @@
                     if (storedData) {
                         const resourcesData = JSON.parse(storedData);
                         
-                        // Update all resource links
+                        // Update all resource links and codes
                         Object.keys(resourcesData).forEach(resourceId => {
                             const resource = resourcesData[resourceId];
-                            const element = document.getElementById(resourceId);
                             
-                            if (element && resourceId.startsWith('resource-link-') && resource.link) {
-                                element.textContent = resource.link;
+                            // Update links
+                            if (resourceId.startsWith('resource-link-') && resource.link) {
+                                const linkElement = document.getElementById(resourceId);
+                                if (linkElement) {
+                                    linkElement.textContent = resource.link;
+                                }
+                            }
+                            
+                            // Update codes
+                            if (resourceId.startsWith('resource-code-') && resource.code) {
+                                const codeElements = document.querySelectorAll(`.code-display[data-target="${resourceId}"]`);
+                                codeElements.forEach(element => {
+                                    element.textContent = resource.code;
+                                });
                             }
                         });
                         
@@ -456,6 +512,7 @@
             
             // Enhanced copy to clipboard functionality
             const copyButtons = document.querySelectorAll('.copy-button');
+            const copyCodeButtons = document.querySelectorAll('.copy-code-button');
             const directLinks = document.querySelectorAll('.direct-link');
             const toast = document.getElementById('toast');
             const toastMessage = document.getElementById('toast-message');
@@ -485,6 +542,58 @@
             
             // Initial update of button data
             updateButtonData();
+            
+            // Add event listeners for copy code buttons
+            copyCodeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const targetId = this.getAttribute('data-target');
+                    const resourceName = this.getAttribute('data-name');
+                    let code = '';
+                    
+                    if (targetId) {
+                        const codeElements = document.querySelectorAll(`.code-display[data-target="${targetId}"]`);
+                        if (codeElements.length > 0) {
+                            code = codeElements[0].textContent;
+                        }
+                    }
+                    
+                    if (code) {
+                        // Copy to clipboard
+                        navigator.clipboard.writeText(code).then(() => {
+                            // Show toast
+                            toastMessage.textContent = `${resourceName}已复制`;
+                            toast.classList.remove('translate-y-20', 'opacity-0');
+                            toast.classList.add('translate-y-0', 'opacity-100');
+                            
+                            // Button animation
+                            const originalContent = this.innerHTML;
+                            this.innerHTML = '<i class="fa fa-check"></i>';
+                            this.classList.add('text-green-500');
+                            
+                            // Reset after delay
+                            setTimeout(() => {
+                                toast.classList.add('translate-y-20', 'opacity-0');
+                                toast.classList.remove('translate-y-0', 'opacity-100');
+                                
+                                setTimeout(() => {
+                                    this.innerHTML = originalContent;
+                                    this.classList.remove('text-green-500');
+                                }, 300);
+                            }, 2000);
+                        }).catch(err => {
+                            console.error('Failed to copy: ', err);
+                            toastMessage.textContent = '复制失败，请手动复制';
+                            toast.classList.remove('translate-y-20', 'opacity-0');
+                            toast.classList.add('translate-y-0', 'opacity-100');
+                            
+                            setTimeout(() => {
+                                toast.classList.add('translate-y-20', 'opacity-0');
+                                toast.classList.remove('translate-y-0', 'opacity-100');
+                            }, 2000);
+                        });
+                    }
+                });
+            });
             
             copyButtons.forEach(button => {
                 button.addEventListener('click', function() {

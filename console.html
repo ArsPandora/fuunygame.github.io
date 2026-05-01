@@ -230,7 +230,14 @@
                                                 保存
                                             </button>
                                         </div>
-
+                                        <div class="flex">
+                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
+                                            <input type="text" id="code-game-1" value="abcd" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-game-1" data-resource-id="resource-code-1">
+                                                保存
+                                            </button>
+                                        </div>
                                     </div>
                                     
                                     <div class="bg-darkgray-lighter rounded-md p-4">
@@ -242,7 +249,14 @@
                                                 保存
                                             </button>
                                         </div>
-
+                                        <div class="flex">
+                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
+                                            <input type="text" id="code-game-2" value="efgh" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-game-2" data-resource-id="resource-code-2">
+                                                保存
+                                            </button>
+                                        </div>
                                     </div>
                                     
                                     <div class="bg-darkgray-lighter rounded-md p-4">
@@ -254,7 +268,14 @@
                                                 保存
                                             </button>
                                         </div>
-
+                                        <div class="flex">
+                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
+                                            <input type="text" id="code-assets-1" value="ijkl" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-assets-1" data-resource-id="resource-code-3">
+                                                保存
+                                            </button>
+                                        </div>
                                     </div>
                                     
                                     <div class="bg-darkgray-lighter rounded-md p-4">
@@ -266,7 +287,14 @@
                                                 保存
                                             </button>
                                         </div>
-
+                                        <div class="flex">
+                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
+                                            <input type="text" id="code-assets-2" value="mnop" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-assets-2" data-resource-id="resource-code-4">
+                                                保存
+                                            </button>
+                                        </div>
                                     </div>
                                     
                                     <div class="bg-darkgray-lighter rounded-md p-4">
@@ -278,64 +306,19 @@
                                                 保存
                                             </button>
                                         </div>
+                                        <div class="flex">
+                                            <label class="block text-sm font-medium text-gray-400 mb-2 mr-2">提取码：</label>
+                                            <input type="text" id="code-docs-1" value="qrst" 
+                                                   class="flex-1 px-4 py-2 bg-darkgray border border-gray-600 rounded-md text-white focus:outline-none focus:ring-2 focus:ring-primary">
+                                            <button class="save-code bg-primary hover:bg-opacity-90 text-white px-4 py-2 rounded-r-md transition-all-300 ml-2" data-code-id="code-docs-1" data-resource-id="resource-code-5">
+                                                保存
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
 
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 图片上传 -->
-                            <div>
-                                <h4 class="font-semibold mb-3">图片资源管理</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="bg-darkgray-lighter rounded-md p-4">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">游戏封面图片上传</label>
-                                        <div class="border-2 border-dashed border-gray-600 rounded-md p-4 text-center cursor-pointer hover:border-primary transition-all-300" id="cover-upload-area">
-                                            <i class="fa fa-cloud-upload text-2xl text-gray-400 mb-2"></i>
-                                            <p class="text-sm text-gray-400">点击或拖拽图片到此处上传</p>
-                                            <p class="text-xs text-gray-500 mt-1">支持 JPG, PNG 格式，最大 5MB</p>
-                                            <input type="file" id="cover-upload" class="hidden" accept="image/*">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="bg-darkgray-lighter rounded-md p-4">
-                                        <label class="block text-sm font-medium text-gray-400 mb-2">实机展示图片上传</label>
-                                        <div class="border-2 border-dashed border-gray-600 rounded-md p-4 text-center cursor-pointer hover:border-primary transition-all-300" id="screenshot-upload-area">
-                                            <i class="fa fa-cloud-upload text-2xl text-gray-400 mb-2"></i>
-                                            <p class="text-sm text-gray-400">点击或拖拽图片到此处上传</p>
-                                            <p class="text-xs text-gray-500 mt-1">支持 JPG, PNG 格式，最大 5MB</p>
-                                            <input type="file" id="screenshot-upload" class="hidden" accept="image/*">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <!-- 资源预览 -->
-                            <div>
-                                <h4 class="font-semibold mb-3">资源预览</h4>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    <div class="bg-darkgray-lighter rounded-md p-4">
-                                        <h5 class="text-sm font-medium text-gray-400 mb-2">当前封面图片</h5>
-                                        <div class="aspect-w-16 aspect-h-9 bg-darkgray rounded-md overflow-hidden">
-                                            <img id="current-cover" src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/bbf26f71a3c7432699388e7ac947ff9f~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202604301135106720E55D8093BE54B22E&rrcfp=f06b921b&x-expires=1780112161&x-signature=c40VMHUsKeJ5sYOvIDV2RNUNeZE%3D" 
-                                                 alt="当前封面图片" class="w-full h-full object-cover">
-                                        </div>
-                                    </div>
-                                    
-                                    <div class="bg-darkgray-lighter rounded-md p-4">
-                                        <h5 class="text-sm font-medium text-gray-400 mb-2">当前实机展示图片</h5>
-                                        <div class="aspect-w-16 aspect-h-9 bg-darkgray rounded-md overflow-hidden">
-                                            <img id="current-screenshot" src="https://p3-flow-imagex-sign.byteimg.com/tos-cn-i-a9rns2rl98/rc/pc/super_tool/b1695fca43aa443bb150743e59314759~tplv-a9rns2rl98-image.image?lk3s=8e244e95&rcl=202604301135106720E55D8093BE54B22E&rrcfp=f06b921b&x-expires=1780112156&x-signature=QDJTb0Awcs8pr3M6Xr8monQNhGs%3D" 
-                                                 alt="当前实机展示图片" class="w-full h-full object-cover">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            
-                            <div class="flex justify-center">
-                                <button id="publish-changes" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-md flex items-center transition-all-300 hover:shadow-glow">
-                                    <i class="fa fa-publish mr-2"></i> 发布所有更改
-                                </button>
-                            </div>
                         </div>
                     </div>
                     
@@ -379,6 +362,21 @@
                         resourcesData[resourceId] = {
                             ...resourcesData[resourceId],
                             link: inputElement.value
+                        };
+                    }
+                });
+                
+                // Get all save code buttons and collect code data
+                const saveCodeButtons = document.querySelectorAll('.save-code');
+                saveCodeButtons.forEach(button => {
+                    const codeId = button.getAttribute('data-code-id');
+                    const resourceId = button.getAttribute('data-resource-id');
+                    const inputElement = document.getElementById(codeId);
+                    
+                    if (resourceId && inputElement) {
+                        resourcesData[resourceId] = {
+                            ...resourcesData[resourceId],
+                            code: inputElement.value
                         };
                     }
                 });
@@ -484,6 +482,32 @@
                         const linkId = this.getAttribute('data-link-id');
                         const resourceId = this.getAttribute('data-resource-id');
                         const inputElement = document.getElementById(linkId);
+                        
+                        if (inputElement && resourceId) {
+                            // Update button text temporarily
+                            const originalText = this.textContent;
+                            this.textContent = '已保存';
+                            this.classList.add('bg-green-600');
+                            
+                            // Sync data
+                            syncToSharePage();
+                            
+                            // Reset button after delay
+                            setTimeout(() => {
+                                this.textContent = originalText;
+                                this.classList.remove('bg-green-600');
+                            }, 1500);
+                        }
+                    });
+                });
+                
+                // Save code buttons
+                const saveCodeButtons = document.querySelectorAll('.save-code');
+                saveCodeButtons.forEach(button => {
+                    button.addEventListener('click', function() {
+                        const codeId = this.getAttribute('data-code-id');
+                        const resourceId = this.getAttribute('data-resource-id');
+                        const inputElement = document.getElementById(codeId);
                         
                         if (inputElement && resourceId) {
                             // Update button text temporarily
