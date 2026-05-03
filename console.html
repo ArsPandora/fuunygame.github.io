@@ -207,12 +207,6 @@
                             </div>
                         </div>
                     </div>
-                    
-
-                    
-
-                    
-
                 </div>
             </div>
             
@@ -224,7 +218,7 @@
     </div>
 
     <script>
-        // Password protection functionality with two-factor authentication
+        // Password protection functionality
         document.addEventListener('DOMContentLoaded', function() {
             const passwordModal = document.getElementById('password-modal');
             const consolePage = document.getElementById('console-page');
@@ -236,7 +230,14 @@
             
             const CORRECT_PASSWORD = 'BF89757';
             
-
+            // 控制打开/关闭时的 body 滚动锁定
+            function setBodyScrollLock(lock) {
+                if (lock) {
+                    document.body.style.overflow = 'hidden';
+                } else {
+                    document.body.style.overflow = '';
+                }
+            }
             
             // Initialize progress bars functionality
             function initProgressBars() {
@@ -260,7 +261,6 @@
                     });
                     
                     bar.addEventListener('change', function() {
-                        // Sync with projects page when progress changes
                         syncProgressToProjectsPage();
                     });
                 });
@@ -269,31 +269,33 @@
                     const projectId = bar.getAttribute('data-project-id');
                     const progress = parseInt(bar.value);
                     const progressText = bar.previousElementSibling;
-                    const progressBar = bar.closest('.bg-darkgray-lighter').querySelector('.bg-green-500, .bg-yellow-500, .bg-gray-500');
-                    const statusBadge = bar.closest('.bg-darkgray-lighter').querySelector('span');
+                    // 使用更精确的选择器
+                    const container = bar.closest('.bg-darkgray-lighter');
+                    const progressBarWrapper = container.querySelector('.w-full.bg-darkgray');
+                    const fillDiv = progressBarWrapper ? progressBarWrapper.querySelector('div') : null;
+                    const statusBadge = container.querySelector('span:first-of-type');
                     
-                    // Update progress text
-                    progressText.textContent = `${progress}% 完成`;
+                    if (progressText) {
+                        progressText.textContent = `${progress}% 完成`;
+                    }
                     
-                    // Update progress bar width
-                    if (progressBar) {
-                        progressBar.style.width = `${progress}%`;
+                    if (fillDiv) {
+                        fillDiv.style.width = `${progress}%`;
                         
-                        // Update color based on progress
                         if (progress === 100) {
-                            progressBar.className = 'bg-green-500 h-2 rounded-full';
+                            fillDiv.className = 'bg-green-500 h-2 rounded-full';
                             if (statusBadge) {
                                 statusBadge.className = 'text-green-500';
                                 statusBadge.textContent = '已完成';
                             }
                         } else if (progress > 0) {
-                            progressBar.className = 'bg-yellow-500 h-2 rounded-full';
+                            fillDiv.className = 'bg-yellow-500 h-2 rounded-full';
                             if (statusBadge) {
                                 statusBadge.className = 'text-yellow-500';
                                 statusBadge.textContent = '开发中';
                             }
                         } else {
-                            progressBar.className = 'bg-gray-500 h-2 rounded-full';
+                            fillDiv.className = 'bg-gray-500 h-2 rounded-full';
                             if (statusBadge) {
                                 statusBadge.className = 'text-gray-500';
                                 statusBadge.textContent = '未开始';
@@ -326,8 +328,6 @@
                 }
             }
             
-
-            
             // Focus password input on load
             setTimeout(() => {
                 passwordInput.focus();
@@ -337,8 +337,6 @@
             showPasswordCheckbox.addEventListener('change', function() {
                 passwordInput.type = this.checked ? 'text' : 'password';
             });
-            
-
             
             // Password form submission
             passwordForm.addEventListener('submit', function(e) {
@@ -352,6 +350,7 @@
                     // Directly show console page after password verification
                     passwordModal.classList.add('hidden');
                     consolePage.classList.remove('hidden');
+                    setBodyScrollLock(true); // 锁定背景滚动
                     
                     // Initialize progress bars after console is visible
                     initProgressBars();
@@ -368,9 +367,7 @@
                 }
             });
             
-
-            
-            // Close console
+            // Close console - 完全修复
             closeConsoleButton.addEventListener('click', function() {
                 consolePage.classList.add('hidden');
                 passwordModal.classList.remove('hidden');
@@ -378,22 +375,13 @@
                 passwordError.classList.add('hidden');
                 passwordInput.classList.remove('border-red-600');
                 
-                // Reset verification form
-                verificationCodeInput.value = '';
-                verificationError.classList.add('hidden');
-                verificationCodeInput.classList.remove('border-red-600');
+                // 重置密码显示状态
+                showPasswordCheckbox.checked = false;
+                passwordInput.type = 'password';
                 
-                // Clear countdown
-                if (countdownTimer) {
-                    clearInterval(countdownTimer);
-                    countdownTimer = null;
-                }
-                
-                // Show password form
-                showPasswordForm();
+                // 解锁背景滚动
+                setBodyScrollLock(false);
             });
-            
-
         });
     </script>
 </body>

@@ -19,7 +19,8 @@
             gameCards.forEach((card, index) => {
                 card.style.cursor = 'pointer';
                 card.addEventListener('click', function() {
-                    window.location.href = `projects.html#game${index + 1}`;
+                    // 修复：跳转到 projects.html 中对应的作品详情锚点
+                    window.location.href = `projects.html#project-${index + 1}`;
                 });
             });
             
